@@ -1,10 +1,28 @@
 from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 
-class TestApp(App):
+class LoginScreen(GridLayout):
+
+    def __init__(self, **kwargs):
+        super(LoginScreen, self).__init__(**kwargs)
+        self.cols = 3
+        self.add_widget(Label(text='User Name'))
+        self.username = TextInput(multiline=False)
+        self.add_widget(self.username)
+        self.add_widget(Label(text='password'))
+        self.password = TextInput(password=True, multiline=False)
+        self.add_widget(self.password)
+       
+        self.btn = Button(text="?")
+        self.add_widget(self.btn)
+
+class MyApp(App):
+
     def build(self):
-        return Button(text='Hello Kivy')
+        return LoginScreen()
 
-
-TestApp().run()
-
+if __name__ == '__main__':
+    MyApp().run()
