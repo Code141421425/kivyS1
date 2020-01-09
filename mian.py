@@ -7,17 +7,20 @@ from kivy.uix.button import Button
 class LoginScreen(GridLayout):
 
     def __init__(self, **kwargs):
+        def test(instance, value):
+             print('My button')
         super(LoginScreen, self).__init__(**kwargs)
-        self.cols = 3
-        self.add_widget(Label(text='User Name'))
-        self.username = TextInput(multiline=False)
-        self.add_widget(self.username)
-        self.add_widget(Label(text='password'))
-        self.password = TextInput(password=True, multiline=False)
-        self.add_widget(self.password)
+        self.cols = 2
+        self.add_widget(Label(text='V 0.1'))
        
-        self.btn = Button(text="?")
+        self.btn = Button(text="Install apk",font_size = 14)
+        self.btn.bind(state = test)
         self.add_widget(self.btn)
+
+    def test(instance):
+        print('The button <%s> is being pressed' % instance.text)
+
+
 
 class MyApp(App):
 
@@ -26,3 +29,4 @@ class MyApp(App):
 
 if __name__ == '__main__':
     MyApp().run()
+
