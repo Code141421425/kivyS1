@@ -3,22 +3,32 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+import os
 
 class LoginScreen(GridLayout):
 
     def __init__(self, **kwargs):
-        def test(instance, value):
-             print('My button')
+        def install_apk(instance):
+            current_path = r"C:\Users\Topjoy\Downloads\PingTools.apk"
+            #files = os.listdir(current_path)
+            file = r"C:\Users\Topjoy\Downloads\PingTools.apk"
+            cmd = "adb install -r " + "\"" + file + "\""
+            os.system(cmd)
+            # for file in files:
+            #     if file[len(file) - 3:len(file)] == "apk":
+            #         cmd = "adb install -r " + "\"" + file + "\""
+            #         os.system(cmd)
+
         super(LoginScreen, self).__init__(**kwargs)
         self.cols = 2
         self.add_widget(Label(text='V 0.1'))
        
         self.btn = Button(text="Install apk",font_size = 14)
-        self.btn.bind(state = test)
+        self.btn.bind(on_release = install_apk)
         self.add_widget(self.btn)
 
-    def test(instance):
-        print('The button <%s> is being pressed' % instance.text)
+    # def test(instance,value):
+    #     print('The button <%s> is being pressed' % instance.text)
 
 
 
