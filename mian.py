@@ -9,15 +9,14 @@ class LoginScreen(GridLayout):
 
     def __init__(self, **kwargs):
         def install_apk(instance):
-            current_path = r"C:\Users\Topjoy\Downloads\PingTools.apk"
-            #files = os.listdir(current_path)
-            file = r"C:\Users\Topjoy\Downloads\PingTools.apk"
-            cmd = "adb install -r " + "\"" + file + "\""
-            os.system(cmd)
-            # for file in files:
-            #     if file[len(file) - 3:len(file)] == "apk":
-            #         cmd = "adb install -r " + "\"" + file + "\""
-            #         os.system(cmd)
+            current_path = r"E:\BaiduNetdiskDownload"
+            files = os.listdir(current_path)
+            #file = r"C:\Users\Topjoy\Downloads\PingTools.apk"
+            for file in files:
+                if file[len(file) - 3:len(file)] == "apk":
+                    cmd = "adb install -r " + "\"" + current_path+ "\\" + file + "\""
+                    #print(cmd) 
+                    os.system(cmd)
 
         super(LoginScreen, self).__init__(**kwargs)
         self.cols = 2
