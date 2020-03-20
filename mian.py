@@ -6,16 +6,22 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 #from kivy.base import runTouchApp
 import os
+import pyperclip
 
 class LoginScreen(GridLayout):
     dropdown = DropDown() # 下拉列表类实例化
+    dropdown_acc = DropDown()
     apkList = []
+    accountList = []
+    root_path = os.path.abspath('.') #根目录 
     current_path = r"C:\Users\Topjoy\Downloads"#下载文件夹下的路径
+    accountLib_path = root_path+"\AccountLib" #账号仓库目录
     newFileTime = 0 #最新文件的修改时间
    
 
     def __init__(self, **kwargs):
-        self.setApkList(self.current_path,"apk")
+        self.setApkList(self.current_path,self.apkList,"apk")
+        self.setApkList(self.accountLib_path,self.accountList,"txt")
         def install_apk(instance):
             cmd = "adb install -r " + "\"" + self.current_path+ "\\" + self.mainbutton.text + "\""
             print(cmd) 
@@ -25,6 +31,11 @@ class LoginScreen(GridLayout):
             #判断当前名称是否为yk开头，*且复选框为true状态
             #从config中，根据yk，找到包名和活动名
             #cmd命令开启
+        
+        def copy_accountJson(instance):
+            f = open(self.root_path+"\AccountLib\\"+self.accountButton.text,"r")
+            data = f.read()
+            pyperclip.copy(data)
 
 
         def refreshApkList(instance):
@@ -34,18 +45,22 @@ class LoginScreen(GridLayout):
         ##创建布局
         super(LoginScreen, self).__init__(**kwargs)
         self.cols = 3
-        self.rows = 2
+        self.rows = 3
 
         ##创建刷新按钮
         self.btn_refresh = Button(text="Refresh ApkList",font_size = 14)
         self.btn_refresh.bind(on_release = refreshApkList)
 
         ##创建安装按钮
-        self.btn = Button(text="Install apk",font_size = 14,width = 100)
-        self.btn.bind(on_release = install_apk)
+        self.btn_install = Button(text="Install apk",font_size = 14,width = 100,height = 40)
+        self.btn_install.bind(on_release = install_apk)
+
+        ##创建复制账号json按钮
+        self.btn_accountCopy = Button(text="AccountJson Copy",font_size = 14,width = 100,height = 40)
+        self.btn_accountCopy.bind(on_release = copy_accountJson)
 
             
-        ##创建下拉列表
+        ##创建下拉列表_apk
         for i in range (len(self.apkList)):
             btn = Button(text=str(self.apkList[i]), size_hint_y=None, height=30)
             btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
@@ -55,38 +70,54 @@ class LoginScreen(GridLayout):
         self.mainbutton.bind(on_release=self.dropdown.open)
         self.dropdown.bind(on_select=lambda instance, x: setattr(self.mainbutton, 'text', x))
 
+        ##创建下拉列表_账号仓库
+        for i in range (len(self.accountList)):
+            btn = Button(text=str(self.accountList[i]), size_hint_y=None, height=30)
+            btn.bind(on_release=lambda btn: self.dropdown_acc.select(btn.text))
+            self.dropdown_acc.add_widget(btn)
+
+        self.accountButton = Button(text=str(self.accountList[0]), size_hint_y=None,width = 280)
+        self.accountButton.bind(on_release=self.dropdown_acc.open)
+        self.dropdown_acc.bind(on_select=lambda instance, x: setattr(self.accountButton, 'text', x))
+
+
+
         ##创建状态面板
         self.statePanel = Label(text = "1")
 
 
         ##装入布局
-        self.add_widget(Label(text='V 0.3'))
+        self.add_widget(Label(text='V 0.4'))
         #self.add_widget(self.statePanel)
         self.add_widget(Label()) 
-        self.add_widget(self.btn_refresh)
         self.add_widget(Label()) 
+        #self.add_widget(self.btn_refresh)
+        self.add_widget(self.accountButton)
         self.add_widget(self.mainbutton)
-        self.add_widget(self.btn)
+        self.add_widget(Label()) 
+        self.add_widget(self.btn_accountCopy)
+        self.add_widget(self.btn_install)
+        
 
         
     #将path下所有的factor_type文件，设置到下拉列表中
-    def setApkList(self,path,factor_type):
+    def setApkList(self,path,list,factor_type):
         files = os.listdir(path)
         for file in files:
             if file[len(file) - 3:len(file)] == factor_type:
                 np = path + "\\" + file  #nowPath
                 print(np)
                 #apklist判空
-                if len(self.apkList) == 0:
+                if len(list) == 0:
                     self.newFileTime = os.stat(np).st_mtime
-                    self.apkList.append(file)
+                    list.append(file)
                 else:
                     #根据时间进行排序，以设定默认（列头）文件
                     if self.newFileTime > os.stat(np).st_mtime:
-                        self.apkList.append(file)
+                        list.append(file)
                     else: 
                         self.newFileTime = os.stat(np).st_mtime
-                        self.apkList.insert(0,file)
+                        list.insert(0,file)
 
     def resetApkList(self):
         print(1)
