@@ -17,6 +17,7 @@ class LoginScreen(GridLayout):
     current_path = r"C:\Users\Topjoy\Downloads"#下载文件夹下的路径
     accountLib_path = root_path+"\AccountLib" #账号仓库目录
     newFileTime = 0 #最新文件的修改时间
+    yk_activityName = "com.topjoy.aspida.jp/com.topjoy.aspida.jp.MainActivity"
    
 
     def __init__(self, **kwargs):
@@ -28,13 +29,23 @@ class LoginScreen(GridLayout):
             os.system(cmd)
 
             #如果当前apk是yk包，则自动打开
-            #判断当前名称是否为yk开头，*且复选框为true状态
-            #从config中，根据yk，找到包名和活动名
-            #cmd命令开启
+            ##判断当前名称是否为yk开头，*且复选框为true状态
+            if self.mainbutton.text[0:2] == "yk":
+                print ("yk_start")
+                #从config中，根据yk，找到包名和活动名
+                cmd = "adb shell am start -n " + self.yk_activityName
+                os.system(cmd)
+            
+        
         def tryAdb(instance):
             cmd = "adb devices"
             print(cmd) 
             os.system(cmd)
+
+            if self.mainbutton.text[0:2] == "yk":
+                print (1)
+
+
 
         def copy_accountJson(instance):
             f = open(self.root_path+"\AccountLib\\"+self.accountButton.text,"r")
@@ -95,16 +106,18 @@ class LoginScreen(GridLayout):
 
 
         ##装入布局
-        self.add_widget(Label(text='V 0.5'))
+        self.add_widget(Label(text='V 0.6'))
         #self.add_widget(self.statePanel)
         self.add_widget(Label()) 
         self.add_widget(self.btn_tryAdb) 
-        #self.add_widget(self.btn_refresh)
+        #self.add_widget(self.btn_refresh) #功能未完成
         self.add_widget(self.accountButton)
         self.add_widget(self.mainbutton)
         self.add_widget(Label()) 
         self.add_widget(self.btn_accountCopy)
         self.add_widget(self.btn_install)
+
+        #mCurrentFocus=Window{f1d0a28 u0 com.topjoy.aspida.jp/com.topjoy.aspida.jp.MainActivity}
         
 
         
