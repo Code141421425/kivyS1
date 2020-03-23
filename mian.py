@@ -31,7 +31,11 @@ class LoginScreen(GridLayout):
             #判断当前名称是否为yk开头，*且复选框为true状态
             #从config中，根据yk，找到包名和活动名
             #cmd命令开启
-        
+        def tryAdb(instance):
+            cmd = "adb devices"
+            print(cmd) 
+            os.system(cmd)
+
         def copy_accountJson(instance):
             f = open(self.root_path+"\AccountLib\\"+self.accountButton.text,"r")
             data = f.read()
@@ -58,6 +62,10 @@ class LoginScreen(GridLayout):
         ##创建复制账号json按钮
         self.btn_accountCopy = Button(text="AccountJson Copy",font_size = 14,width = 100,height = 40)
         self.btn_accountCopy.bind(on_release = copy_accountJson)
+
+        ##尝试连接ADB
+        self.btn_tryAdb = Button(text="TryAdb devices",font_size = 14,width = 100,height = 40)
+        self.btn_tryAdb.bind(on_release = tryAdb)
 
             
         ##创建下拉列表_apk
@@ -87,10 +95,10 @@ class LoginScreen(GridLayout):
 
 
         ##装入布局
-        self.add_widget(Label(text='V 0.4'))
+        self.add_widget(Label(text='V 0.5'))
         #self.add_widget(self.statePanel)
         self.add_widget(Label()) 
-        self.add_widget(Label()) 
+        self.add_widget(self.btn_tryAdb) 
         #self.add_widget(self.btn_refresh)
         self.add_widget(self.accountButton)
         self.add_widget(self.mainbutton)
