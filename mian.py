@@ -27,6 +27,7 @@ class LoginScreen(GridLayout):
         def install_apk(instance):
             #卸载应用
             cmd = "adb uninstall " + self.yk_packageName
+            print(cmd)
             os.system(cmd)
 
             #安装应用
@@ -48,15 +49,13 @@ class LoginScreen(GridLayout):
             print(cmd) 
             os.system(cmd)
 
-            if self.mainbutton.text[0:2] == "yk":
-                print (1)
-
 
 
         def copy_accountJson(instance):
             f = open(self.root_path+"\AccountLib\\"+self.accountButton.text,"r")
             data = f.read()
             pyperclip.copy(data)
+            print("Copy done")
 
 
         def refreshApkList(instance):
@@ -121,10 +120,7 @@ class LoginScreen(GridLayout):
         self.add_widget(self.mainbutton)
         self.add_widget(Label()) 
         self.add_widget(self.btn_accountCopy)
-        self.add_widget(self.btn_install)
-
-        #mCurrentFocus=Window{f1d0a28 u0 com.topjoy.aspida.jp/com.topjoy.aspida.jp.MainActivity}
-        
+        self.add_widget(self.btn_install)      
 
         
     #将path下所有的factor_type文件，设置到下拉列表中
