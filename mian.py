@@ -18,12 +18,18 @@ class LoginScreen(GridLayout):
     accountLib_path = root_path+"\AccountLib" #账号仓库目录
     newFileTime = 0 #最新文件的修改时间
     yk_activityName = "com.topjoy.aspida.jp/com.topjoy.aspida.jp.MainActivity"
+    yk_packageName = "com.topjoy.aspida.jp"
    
 
     def __init__(self, **kwargs):
         self.setApkList(self.current_path,self.apkList,"apk")
         self.setApkList(self.accountLib_path,self.accountList,"txt")
         def install_apk(instance):
+            #卸载应用
+            cmd = "adb uninstall " + self.yk_packageName
+            os.system(cmd)
+
+            #安装应用
             cmd = "adb install -r " + "\"" + self.current_path+ "\\" + self.mainbutton.text + "\""
             print(cmd) 
             os.system(cmd)
