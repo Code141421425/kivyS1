@@ -26,9 +26,11 @@ class LoginScreen(GridLayout):
         self.setApkList(self.accountLib_path,self.accountList,"txt")
         def install_apk(instance):
             #卸载应用
-            cmd = "adb uninstall " + self.yk_packageName
-            print(cmd)
-            os.system(cmd)
+            if self.mainbutton.text[0:2] == "yk":
+                print("yk_uninstall")
+                cmd = "adb uninstall " + self.yk_packageName
+                print(cmd)
+                os.system(cmd)
 
             #安装应用
             cmd = "adb install -r " + "\"" + self.current_path+ "\\" + self.mainbutton.text + "\""
