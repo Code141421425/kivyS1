@@ -6,7 +6,10 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 #from kivy.base import runTouchApp
 import os
+import sys
 import pyperclip
+import configparser
+
 
 class LoginScreen(GridLayout):
     dropdown = DropDown() # 下拉列表类实例化
@@ -14,7 +17,13 @@ class LoginScreen(GridLayout):
     apkList = []
     accountList = []
     root_path = os.path.abspath('.') #根目录 
-    current_path = r"C:\Users\Topjoy\Downloads"#下载文件夹下的路径
+
+    #读取设置
+    localCfg_path = os.path.join(root_path,"cfg.ini")
+    cfg = configparser.ConfigParser()
+    cfg.read(localCfg_path)
+    current_path = cfg.get("Base","DownloadPath") #下载文件夹下的路径
+    
     accountLib_path = root_path+"\AccountLib" #账号仓库目录
     newFileTime = 0 #最新文件的修改时间
     yk_activityName = "com.topjoy.aspida.jp/com.topjoy.aspida.jp.MainActivity"
@@ -113,7 +122,7 @@ class LoginScreen(GridLayout):
 
 
         ##装入布局
-        self.add_widget(Label(text='V 0.81'))
+        self.add_widget(Label(text='V 0.9'))
         #self.add_widget(self.statePanel)
         self.add_widget(Label()) 
         self.add_widget(self.btn_tryAdb) 
