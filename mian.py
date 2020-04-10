@@ -26,32 +26,29 @@ class LoginScreen(GridLayout):
         self.setApkList(self.accountLib_path,self.accountList,"txt")
         def install_apk(instance):
             #卸载应用
-            if self.mainbutton.text[0:2] == "yk":
+            if self.dropBtn_apkList.text[0:2] == "yk":
                 print("yk_uninstall")
                 cmd = "adb uninstall " + self.yk_packageName
                 print(cmd)
                 os.system(cmd)
 
             #安装应用
-            cmd = "adb install -r " + "\"" + self.current_path+ "\\" + self.mainbutton.text + "\""
+            cmd = "adb install -r " + "\"" + self.current_path+ "\\" + self.dropBtn_apkList.text + "\""
             print(cmd) 
             os.system(cmd)
 
             #如果当前apk是yk包，则自动打开
             ##判断当前名称是否为yk开头，*且复选框为true状态
-            if self.mainbutton.text[0:2] == "yk":
+            if self.dropBtn_apkList.text[0:2] == "yk":
                 print ("yk_start")
                 #从config中，根据yk，找到包名和活动名
                 cmd = "adb shell am start -n " + self.yk_activityName
                 os.system(cmd)
-            
-        
+
         def tryAdb(instance):
             cmd = "adb devices"
             print(cmd) 
             os.system(cmd)
-
-
 
         def copy_accountJson(instance):
             f = open(self.root_path+"\AccountLib\\"+self.accountButton.text,"r")
@@ -59,14 +56,13 @@ class LoginScreen(GridLayout):
             pyperclip.copy(data)
             print("Copy done")
 
-
         def refreshApkList(instance):
-            #self.resetApkList()
-            print("No Finish")
+            self.resetApkList()
+            print("Reset_Finish")
 
         ##创建布局
         super(LoginScreen, self).__init__(**kwargs)
-        self.cols = 3
+        #self.cols = 3
         self.rows = 3
 
         ##创建刷新按钮
@@ -92,9 +88,9 @@ class LoginScreen(GridLayout):
             btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
             self.dropdown.add_widget(btn)
 
-        self.mainbutton = Button(text=str(self.apkList[0]), size_hint_y=None,width = 280)
-        self.mainbutton.bind(on_release=self.dropdown.open)
-        self.dropdown.bind(on_select=lambda instance, x: setattr(self.mainbutton, 'text', x))
+        self.dropBtn_apkList = Button(text=str(self.apkList[0]), size_hint_y=None,width = 280)
+        self.dropBtn_apkList.bind(on_release=self.dropdown.open)
+        self.dropdown.bind(on_select=lambda instance, x: setattr(self.dropBtn_apkList, 'text', x))
 
         ##创建下拉列表_账号仓库
         for i in range (len(self.accountList)):
@@ -113,14 +109,15 @@ class LoginScreen(GridLayout):
 
 
         ##装入布局
-        self.add_widget(Label(text='V 0.6'))
+        self.add_widget(Label(text='V 0.8'))
         #self.add_widget(self.statePanel)
         self.add_widget(Label()) 
         self.add_widget(self.btn_tryAdb) 
-        #self.add_widget(self.btn_refresh) #功能未完成
+        
         self.add_widget(self.accountButton)
-        self.add_widget(self.mainbutton)
-        self.add_widget(Label()) 
+        self.add_widget(self.dropBtn_apkList)#apklist
+        self.add_widget(self.btn_refresh) 
+
         self.add_widget(self.btn_accountCopy)
         self.add_widget(self.btn_install)      
 
@@ -131,7 +128,7 @@ class LoginScreen(GridLayout):
         for file in files:
             if file[len(file) - 3:len(file)] == factor_type:
                 np = path + "\\" + file  #nowPath
-                print(np)
+
                 #apklist判空
                 if len(list) == 0:
                     self.newFileTime = os.stat(np).st_mtime
@@ -145,19 +142,24 @@ class LoginScreen(GridLayout):
                         list.insert(0,file)
 
     def resetApkList(self):
-        print(1)
-        # self.apkList = []
-        # self.remove_widget(self.mainbutton)
-        # self.setApkList()
-        # for i in range (len(self.apkList)):
-        #     btn = Button(text=str(self.apkList[i]), size_hint_y=None, height=30)
-        #     btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
-        #     self.dropdown.add_widget(btn)
+        print("=======")
+        print(self.dropdown.children)
+        
+        #清除原下拉菜单中所有的控件
+        #self.dropdown.dismiss()
+        self.dropdown.clear_widgets()
 
-        # self.mainbutton = Button(text=str(self.apkList[0]), size_hint_y=None,width = 280)
-        # self.mainbutton.bind(on_release=self.dropdown.open)
-        # self.dropdown.bind(on_select=lambda instance, x: setattr(self.mainbutton, 'text', x))
-        # self.add_widget(self.mainbutton)
+        self.apkList = []
+        self.setApkList(self.current_path,self.apkList,"apk")
+        print("resting")
+
+        for i in range (len(self.apkList)):
+            btn = Button(text=str(self.apkList[i]), size_hint_y=None, height=30)
+            btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
+            self.dropdown.add_widget(btn)
+
+        self.dropdown.select(self.apkList[0])
+
         
 
 
