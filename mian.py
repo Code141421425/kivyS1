@@ -83,6 +83,10 @@ class LoginScreen(GridLayout):
 
             
         ##创建下拉列表_apk
+
+        if self.apkList == []:
+            self.apkList.append("No APK in this folder !!!")
+
         for i in range (len(self.apkList)):
             btn = Button(text=str(self.apkList[i]), size_hint_y=None, height=30)
             btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
@@ -109,7 +113,7 @@ class LoginScreen(GridLayout):
 
 
         ##装入布局
-        self.add_widget(Label(text='V 0.8'))
+        self.add_widget(Label(text='V 0.81'))
         #self.add_widget(self.statePanel)
         self.add_widget(Label()) 
         self.add_widget(self.btn_tryAdb) 
@@ -124,7 +128,13 @@ class LoginScreen(GridLayout):
         
     #将path下所有的factor_type文件，设置到下拉列表中
     def setApkList(self,path,list,factor_type):
-        files = os.listdir(path)
+        try:
+            files = os.listdir(path)
+
+        except FileNotFoundError:
+            print("路径错误，未找到")
+            return
+
         for file in files:
             if file[len(file) - 3:len(file)] == factor_type:
                 np = path + "\\" + file  #nowPath
