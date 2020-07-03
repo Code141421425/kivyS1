@@ -26,9 +26,11 @@ class LoginScreen(GridLayout):
     
     accountLib_path = root_path+"\AccountLib" #账号仓库目录
     newFileTime = 0 #最新文件的修改时间
-    yk_activityName = "com.topjoy.aspida.jp/com.topjoy.aspida.jp.MainActivity"
-    yk_packageName = "com.topjoy.aspida.jp"
+    yk_activityName = "com.topjoy.ukishima/com.topjoy.ukishima.MainActivity" #"com.topjoy.aspida.jp/com.topjoy.aspida.jp.MainActivity"
+    yk_packageName = "com.topjoy.ukishima"
    
+    testDeviceCode = "8BN0217926005187" # 测试机号——荣耀9
+    ifATRun = True # 是否装完包后，运行Airtest脚本
 
     def __init__(self, **kwargs):
         self.setApkList(self.current_path,self.apkList,"apk")
@@ -53,6 +55,11 @@ class LoginScreen(GridLayout):
                 #从config中，根据yk，找到包名和活动名
                 cmd = "adb shell am start -n " + self.yk_activityName
                 os.system(cmd)
+
+                ## 如果在开关打开的情况下，自动执行一段AT脚本
+                if self.ifATRun == True:
+                    self.ATRun(1,1)
+                
 
         def tryAdb(instance):
             cmd = "adb devices"
@@ -179,7 +186,12 @@ class LoginScreen(GridLayout):
 
         self.dropdown.select(self.apkList[0])
 
-        
+    def ATRun(self,ATScript,device):
+        path = self.root_path+"\AT\\"        
+        cmdRequire = "cd "+ path
+        print(cmdRequire)
+        os.system("python -m airtest run \\WorkSpace\\kivyS1\\AT\\yk_toGameStart.air --device Android:8BN0217926005187?cap_method=JAVACAP^&^&ori_method=ADBORI^&^&touch_method=ADBTOUCH")
+        # os.system("exit")
 
 
 
